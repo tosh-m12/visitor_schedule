@@ -13,7 +13,6 @@ myvenv/
 .DS_Store
 node_modules/
 media/
-*.csv
 *.xlsx
 .idea/
 .vscode/
