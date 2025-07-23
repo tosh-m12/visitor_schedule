@@ -34,30 +34,26 @@ def index(request):
 def add_visitor(request):
     VisitorFormSet = formset_factory(VisitorForm, extra=3)
     formset = VisitorFormSet(request.POST or None)
+    time_choices = formset.empty_form.fields['visit_time'].widget.choices  # ← ここを追加
 
     if request.method == 'POST':
         has_error = False
         valid_forms = []
 
         for form in formset:
-            # 全フィールドが空かどうかチェック
             all_empty = all(
-                not form.data.get(f'{form.prefix}-{field}') 
+                not form.data.get(f'{form.prefix}-{field}')
                 for field in form.fields
             )
-
             if all_empty:
-                continue  # 完全空欄行は無視
+                continue
 
             if form.is_valid():
                 valid_forms.append(form)
             else:
-                has_error = True  # 一部でも入力があって不完全ならエラー扱い
-
-            # 全く変更されていない（全項目空欄）の行は無視
+                has_error = True
 
         if not has_error and valid_forms:
-            # ID 採番処理
             current_id = 1
             try:
                 with open(CSV_FILE_PATH, newline='', encoding='utf-8') as csvfile:
@@ -89,7 +85,11 @@ def add_visitor(request):
 
             return redirect('index')
 
-    return render(request, 'visitors/add.html', {'formset': formset})
+    return render(request, 'visitors/add.html', {
+        'formset': formset,
+        'time_choices': [choice for choice in formset.empty_form.fields['visit_time'].widget.choices],
+    })
+
 
 def cancel_visitor(request, id):
     if request.method == 'POST':
