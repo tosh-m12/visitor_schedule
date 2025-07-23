@@ -1,16 +1,22 @@
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
+from django.conf import settings
+from django.contrib import messages
+from .forms import VisitorForm
+from django.utils import translation
 import csv
 import os
+import subprocess
 from datetime import datetime
-from .forms import VisitorForm
-from django.conf import settings
+
 
 
 CSV_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'visitor_list.csv')
 
-MAILING_LIST_FILE = os.path.join(settings.BASE_DIR, 'mailing_list.csv')
+MAILING_LIST_FILE = os.path.join(settings.BASE_DIR, 'visitors', 'mailing_list.csv')
 HOLIDAYS_FILE = os.path.join(settings.BASE_DIR, 'holidays.csv')
+
+SEND_TIME_FILE = os.path.join(settings.BASE_DIR, 'send_time.csv')
 
 def index(request):
     visitors = []
@@ -30,6 +36,13 @@ def index(request):
         pass
 
     return render(request, 'visitors/index.html', {'visitors': visitors})
+
+def set_language(request):
+    lang_code = request.GET.get('language', 'ja')
+    response = redirect(request.META.get('HTTP_REFERER', '/'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code)
+    translation.activate(lang_code)
+    return response
 
 def add_visitor(request):
     VisitorFormSet = formset_factory(VisitorForm, extra=3)
@@ -170,6 +183,12 @@ def settings_view(request):
                 if date.strip():
                     writer.writerow([date.strip()])
 
+        # 送信時刻保存処理
+        send_time = request.POST.get('send_time', '09:00')
+        with open(SEND_TIME_FILE, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow([send_time])
+
         return redirect('settings')
 
     # 表示用データ読み込み
@@ -179,7 +198,39 @@ def settings_view(request):
     with open(HOLIDAYS_FILE, 'r', encoding='utf-8') as f:
         holidays = [row[0] for row in csv.reader(f) if row]
 
+    send_time = '09:00'
+    if os.path.exists(SEND_TIME_FILE):
+        with open(SEND_TIME_FILE, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if row and row[0].strip():
+                    send_time = row[0].strip()
+                    break
+
     return render(request, 'visitors/settings.html', {
         'mailing_list': mailing_list,
         'holidays': holidays,
+        'send_time': send_time,
     })
+
+def run_email(request):
+    import subprocess
+    import os
+    from django.contrib import messages
+
+    # 仮想環境の Python を明示的に指定（←ここが重要）
+    venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
+    script_path = os.path.join(settings.BASE_DIR, 'run_email.py')
+
+    try:
+        result = subprocess.run([venv_python, script_path], check=True, capture_output=True, text=True)
+        messages.success(request, "📨 メール送信を実行しました。")
+        print("[DEBUG] メール送信完了:", result.stdout)
+    except subprocess.CalledProcessError as e:
+        messages.error(request, f"⚠ メール送信に失敗しました：{e.stderr or e}")
+        print("[ERROR] メール送信失敗:", e.stderr or e)
+    except Exception as e:
+        messages.error(request, f"⚠ エラーが発生しました：{str(e)}")
+        print("[ERROR] 実行エラー:", str(e))
+
+    return redirect('settings')

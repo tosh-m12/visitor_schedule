@@ -1,9 +1,9 @@
-
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>来訪予定の編集</title>
+    <title>{% trans "来訪予定の編集" %}</title>
     <style>
         table {
             border-collapse: collapse;
@@ -19,24 +19,28 @@
     </style>
 </head>
 <body>
-    <h1>来訪予定の編集</h1>
+    <div style="text-align: left;">
+        <a href="{% url 'set_language' %}?language=ja">日本語</a> |
+        <a href="{% url 'set_language' %}?language=zh_Hans">简体中文</a>
+    </div>    
+    <h1>{% trans "編集ページ" %}</h1>
 
     <form method="post">
         {% csrf_token %}
         <table>
             <thead>
                 <tr>
-                    <th>来訪日</th>
-                    <th>時間</th>
-                    <th>時間未定</th>
-                    <th>会社名</th>
-                    <th>姓</th>
-                    <th>名</th>
-                    <th>役職</th>
-                    <th>目的</th>
-                    <th>訪問場所</th>
-                    <th>担当者</th>
-                    <th>備考</th>
+                    <th>{% trans "来訪日" %}</th>
+                    <th>{% trans "時間" %}</th>
+                    <th>{% trans "未定" %}</th>
+                    <th>{% trans "正式会社名" %}</th>
+                    <th>{% trans "姓" %}</th>
+                    <th>{% trans "名" %}</th>
+                    <th>{% trans "役職" %}</th>
+                    <th>{% trans "目的" %}</th>
+                    <th>{% trans "訪問場所" %}</th>
+                    <th>{% trans "入力者" %}</th>
+                    <th>{% trans "備考" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,9 +59,9 @@
                 </tr>
             </tbody>
         </table>
-        <p><button type="submit">保存</button></p>
+        <p><button type="submit">{% trans "保存" %}</button></p>
     </form>
 
-    <p><a href="{% url 'index' %}">← 戻る</a></p>
+    <p><a href="{% url 'index' %}">← {% trans "戻る" %}</a></p>
 </body>
 </html>

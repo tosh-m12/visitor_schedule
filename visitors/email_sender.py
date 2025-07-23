@@ -85,23 +85,26 @@ def send_daily_email():
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = '【来訪予定通知】本日以降の来訪一覧'
-    msg['From'] = 'NGLS-CS-INFO <cs_info@ngls.sh.cn>'
-    #msg['From'] = 'cs_info@ngls.sh.cn'
+    #msg['From'] = 'NGLS-CS-INFO <cs_info@ngls.sh.cn>'
+    msg['From'] = 'cs_info@ngls.sh.cn'
     msg['To'] = ", ".join(recipients)
 
     part = MIMEText(html_content, 'html', 'utf-8')
     msg.attach(part)
 
     try:
+        print("[DEBUG] SMTP接続開始")
         server = smtplib.SMTP('smtp.qiye.aliyun.com', 587)
-        #server.set_debuglevel(1)
+        server.set_debuglevel(1)
         server.starttls()
+        print("[DEBUG] ログイン中")
         server.login('cs_info@ngls.sh.cn', 'NGLScs99811')
+        print("[DEBUG] メール送信中")
         server.sendmail(msg['From'], recipients, msg.as_string())
         server.quit()
-        print("メール送信完了")
+        print("[DEBUG] メール送信完了")
     except Exception as e:
-        print("メール送信失敗:", e)
+        print("[DEBUG] メール送信失敗:", e)
 
 if __name__ == '__main__':
     today = datetime.date.today()

@@ -9,7 +9,7 @@
         table { margin-bottom: 30px; width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         h2 { margin-top: 40px; }
-        input[type="text"] { width: 100%; }
+        input[type="text"], input[type="time"] { width: 100%; }
         .delete-btn { color: red; cursor: pointer; }
     </style>
     <script>
@@ -61,9 +61,27 @@
         </table>
         <button type="button" onclick="addRow('holiday-section', 'holidays')">＋ 日付を追加</button>
 
+        <h2>📨 メール送信時刻（全社向け通知）</h2>
+        <table>
+            <tr>
+                <th>送信時刻（例: 09:00）</th>
+                <td><input type="time" name="send_time" value="{{ send_time }}"></td>
+            </tr>
+        </table>
+
         <br><br>
         <button type="submit">💾 保存</button>
     </form>
+
+    <form method="post" action="{% url 'run_email' %}" onsubmit="return confirmSend();">
+        {% csrf_token %}
+        <button type="submit">📨 今すぐ送信</button>
+    </form>
+    <script>
+        function confirmSend() {
+            return confirm("メールを今すぐ送信しますか？");
+        }
+    </script>
 
     <p><a href="{% url 'index' %}">← 一覧に戻る</a></p>
 </body>
