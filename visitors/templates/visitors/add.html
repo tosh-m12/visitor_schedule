@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>来訪予定登録（動的行追加）</title>
+    <link rel="stylesheet" href="{% static 'visitors/style.css' %}">
+</head>
+<body>
+    <h1>来訪予定の新規登録</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>訪問日</th>
+                    <th>訪問時間</th>
+                    <th>時間未定</th>
+                    <th>会社名</th>
+                    <th>姓</th>
+                    <th>名</th>
+                    <th>役職</th>
+                    <th>目的</th>
+                    <th>場所</th>
+                    <th>担当者</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody id="formset-body">
+                {% for form in formset %}
+                <tr class="form-row">
+                    <td>
+                        {{ form.visit_date }}
+                        {% if form.visit_date.errors %}
+                        <div style="color: red;">{{ form.visit_date.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.visit_time }}
+                        {% if form.visit_time.errors %}
+                        <div style="color: red;">{{ form.visit_time.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.time_undecided }}
+                    </td>
+                    <td>
+                        {{ form.company_name }}
+                        {% if form.company_name.errors %}
+                        <div style="color: red;">{{ form.company_name.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <div style="color: red;">{{ form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <div style="color: red;">{{ form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <div style="color: red;">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.purpose }}
+                        {% if form.purpose.errors %}
+                        <div style="color: red;">{{ form.purpose.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                        <div style="color: red;">{{ form.location.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.host_staff }}
+                        {% if form.host_staff.errors %}
+                        <div style="color: red;">{{ form.host_staff.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                        <div style="color: red;">{{ form.notes.errors.0 }}</div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit">保存</button>
+        <button type="button" onclick="addForm()">行を追加</button>
+    </form>
+
+    <p><a href="{% url 'index' %}">一覧に戻る</a></p>
+
+    <script>
+        let formIdx = {{ formset.total_form_count }};
+        const timeChoices = `
+            {% for value, label in formset.empty_form.fields.visit_time.choices %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        `;
+
+        const emptyRow = `
+        <tr class="form-row">
+            <td><input type="date" name="form-__prefix__-visit_date"></td>
+            <td>
+                <select name="form-__prefix__-visit_time">
+                    ${timeChoices}
+                </select>
+            </td>
+            <td><input type="checkbox" name="form-__prefix__-time_undecided"></td>
+            <td><input type="text" name="form-__prefix__-company_name"></td>
+            <td><input type="text" name="form-__prefix__-last_name"></td>
+            <td><input type="text" name="form-__prefix__-first_name"></td>
+            <td><input type="text" name="form-__prefix__-title"></td>
+            <td><input type="text" name="form-__prefix__-purpose"></td>
+            <td><input type="text" name="form-__prefix__-location"></td>
+            <td><input type="text" name="form-__prefix__-host_staff"></td>
+            <td><input type="text" name="form-__prefix__-notes"></td>
+        </tr>`;
+
+        function addForm() {
+            const newRow = emptyRow.replace(/__prefix__/g, formIdx);
+            document.getElementById('formset-body').insertAdjacentHTML('beforeend', newRow);
+            formIdx++;
+            document.getElementById('id_form-TOTAL_FORMS').value = formIdx;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="-time_undecided"]');
+            checkboxes.forEach((checkbox) => {
+                const index = checkbox.name.match(/\d+/)[0];
+                const timeInput = document.querySelector(`select[name="form-${index}-visit_time"]`);
+                if (timeInput) {
+                    checkbox.addEventListener('change', function () {
+                        timeInput.disabled = this.checked;
+                        if (this.checked) timeInput.value = '';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

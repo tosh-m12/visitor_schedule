@@ -1,0 +1,20 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.log
+*.bak
+*.swp
+env/
+venv/
+myvenv/
+.DS_Store
+node_modules/
+media/
+*.csv
+*.xlsx
+.idea/
+.vscode/
+.env

@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>設定管理画面</title>
+    <link rel="stylesheet" href="{% static 'visitors/style.css' %}">
+    <style>
+        table { margin-bottom: 30px; width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        h2 { margin-top: 40px; }
+        input[type="text"] { width: 100%; }
+        .delete-btn { color: red; cursor: pointer; }
+    </style>
+    <script>
+        function addRow(sectionId, inputName) {
+            const container = document.getElementById(sectionId);
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" name="${inputName}" /></td>
+                <td><span class="delete-btn" onclick="this.parentElement.parentElement.remove()">削除</span></td>
+            `;
+            container.appendChild(newRow);
+        }
+    </script>
+</head>
+<body>
+    <h1>設定管理画面</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <h2>📧 メーリングリスト</h2>
+        <table>
+            <thead>
+                <tr><th>Email アドレス</th><th>操作</th></tr>
+            </thead>
+            <tbody id="mailing-list-section">
+                {% for email in mailing_list %}
+                <tr>
+                    <td><input type="text" name="emails" value="{{ email }}"></td>
+                    <td><span class="delete-btn" onclick="this.parentElement.parentElement.remove()">削除</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" onclick="addRow('mailing-list-section', 'emails')">＋ メールアドレスを追加</button>
+
+        <h2>📅 休日設定（送信対象外日）</h2>
+        <table>
+            <thead>
+                <tr><th>日付（YYYY-MM-DD）</th><th>操作</th></tr>
+            </thead>
+            <tbody id="holiday-section">
+                {% for date in holidays %}
+                <tr>
+                    <td><input type="text" name="holidays" value="{{ date }}"></td>
+                    <td><span class="delete-btn" onclick="this.parentElement.parentElement.remove()">削除</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" onclick="addRow('holiday-section', 'holidays')">＋ 日付を追加</button>
+
+        <br><br>
+        <button type="submit">💾 保存</button>
+    </form>
+
+    <p><a href="{% url 'index' %}">← 一覧に戻る</a></p>
+</body>
+</html>

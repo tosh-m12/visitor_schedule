@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>本日以降の来訪予定</title>
+    <style>
+        .cancelled-row td {
+            color: red;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>本日以降の来訪予定一覧</h1>
+
+    {% if visitors %}
+        <table border="1">
+            <tr>
+                <th>来訪日</th>
+                <th>時間</th>
+                <th>時間未定</th>
+                <th>会社名</th>
+                <th>来訪者（姓）</th>
+                <th>来訪者（名）</th>
+                <th>役職</th>
+                <th>目的</th>
+                <th>訪問場所</th>
+                <th>担当者</th>
+                <th>備考</th>
+                <th>操作</th>
+            </tr>
+            {% for v in visitors %}
+            <tr class="{% if v.cancelled_flag %}cancelled-row{% endif %}">
+                <td>{{ v.visit_date }}</td>
+                <td>{{ v.visit_time }}</td>
+                <td>{% if v.time_undecided_flag %}✔{% endif %}</td>
+                <td>{{ v.company_name }}</td>
+                <td>{{ v.last_name }}</td>
+                <td>{{ v.first_name }}</td>
+                <td>{{ v.title }}</td>
+                <td>{{ v.purpose }}</td>
+                <td>{{ v.location }}</td>
+                <td>{{ v.host_staff }}</td>
+                <td>{{ v.notes }}</td>
+                <td>
+                    {% if not v.cancelled_flag %}
+                    <form action="{% url 'cancel_visitor' v.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('この来訪予定をキャンセルしますか？');">キャンセル</button>
+                    </form>
+                    <a href="{% url 'edit_visitor' v.id %}">編集</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>本日以降の来訪予定はありません。</p>
+    {% endif %}
+
+    <p><a href="{% url 'add_visitor' %}">▶ 来訪予定を登録する</a></p>
+</body>
+</html>
