@@ -85,8 +85,8 @@ def send_daily_email():
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = '【来訪予定通知】本日以降の来訪一覧'
-    #msg['From'] = 'NGLS-CS-INFO <cs_info@ngls.sh.cn>'
-    msg['From'] = 'cs_info@ngls.sh.cn'
+    msg['From'] = 'NGLS-CS-INFO <cs_info@ngls.sh.cn>'
+    #msg['From'] = 'cs_info@ngls.sh.cn'
     msg['To'] = ", ".join(recipients)
 
     part = MIMEText(html_content, 'html', 'utf-8')
