@@ -1,3 +1,2 @@
 id,visit_date,visit_time,time_undecided,company_name,last_name,first_name,title,purpose,location,host_staff,notes,cancelled
-1,2025-07-30,15:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,Murayama,,true
-2,2025-07-30,15:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,Murayama,,
+1,2025-07-30,15:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,村山,,

@@ -6,7 +6,6 @@ from .forms import VisitorForm
 from django.utils import translation
 import csv
 import os
-import subprocess
 from datetime import datetime
 
 
@@ -215,14 +214,23 @@ def settings_view(request):
 
 def run_email(request):
     import subprocess
-    import os
     from django.contrib import messages
 
     # 仮想環境の Python を明示的に指定（←ここが重要）
-    venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
-    script_path = os.path.join(settings.BASE_DIR, 'run_email.py')
+    #venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
+    #script_path = os.path.join(settings.BASE_DIR, 'run_email.py')
+    venv_python = r"D:\django-project01\myvenv\Scripts\python.exe"
+    script_path = r"D:\django-project01\visitor_schedule\run_email.py"
 
     try:
+        # venv_python = r"D:\django-project01\myvenv\Scripts\python.exe"
+        # script_path = r"D:\django-project01\visitor_schedule\run_email.py"
+        # script_path = os.path.join(settings.BASE_DIR, 'run_email.py')
+
+        # venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
+        # if not os.path.exists(venv_python):
+            # venv_python = 'python'
+
         result = subprocess.run([venv_python, script_path], check=True, capture_output=True, text=True)
         messages.success(request, "📨 メール送信を実行しました。")
         print("[DEBUG] メール送信完了:", result.stdout)
