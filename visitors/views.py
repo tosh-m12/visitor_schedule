@@ -216,7 +216,6 @@ def settings_view(request):
 def run_email(request):
     import subprocess
     import os
-    from django.contrib import messages
 
     # 仮想環境の Python を明示的に指定（←ここが重要）
     venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
