@@ -34,10 +34,6 @@ def is_holiday(today):
     return False
 
 def read_visitors(today):
-    # 修正前:
-    # path = os.path.join('visitor_schedule', 'visitor_list.csv')
-
-    # 修正後: email_sender.py から見た相対パス
     path = os.path.join(os.path.dirname(__file__), '..', 'visitor_list.csv')
     path = os.path.abspath(path)  # フルパスに変換して安全に
 
@@ -60,11 +56,14 @@ def read_visitors(today):
                 else:
                     visit_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
                 if visit_date >= today:
+                    row['visit_date'] = visit_date
                     row['is_cancelled'] = row.get('cancelled', '').strip().lower() == 'true'
                     visitors.append(row)
             except Exception as e:
                 print(f"[ERROR] 日付変換失敗: {row} → {e}")
                 continue
+    
+    visitors.sort(key=lambda x: (x.get('visit_date', ''), x.get('visit_time', '00:00')))
 
     print(f"[DEBUG] 読み込まれた来訪予定件数: {len(visitors)}")
     return visitors
