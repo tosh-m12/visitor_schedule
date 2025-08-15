@@ -11,11 +11,10 @@ from datetime import datetime
 
 
 CSV_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'visitor_list.csv')
-
 MAILING_LIST_FILE = os.path.join(settings.BASE_DIR, 'visitors', 'mailing_list.csv')
 HOLIDAYS_FILE = os.path.join(settings.BASE_DIR, 'holidays.csv')
-
 SEND_TIME_FILE = os.path.join(settings.BASE_DIR, 'send_time.csv')
+
 
 def index(request):
     visitors = []
@@ -27,6 +26,7 @@ def index(request):
             for row in reader:
                 visit_date = datetime.strptime(row['visit_date'], "%Y-%m-%d").date()
                 if visit_date >= today:
+                    row['visit_date'] = visit_date
                     row['cancelled_flag'] = row.get('cancelled', '').lower() in ['true', 'on', '1']
                     row['time_undecided_flag'] = row.get('time_undecided', '').lower() in ['true', 'on', '1']
                     visitors.append(row)
@@ -216,7 +216,6 @@ def settings_view(request):
 
 def run_email(request):
     import subprocess
-    from django.contrib import messages
 
     # 仮想環境の Python を明示的に指定（←ここが重要）
     #venv_python = os.path.join(settings.BASE_DIR, 'myvenv', 'Scripts', 'python.exe')
