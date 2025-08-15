@@ -34,6 +34,8 @@ def index(request):
     except FileNotFoundError:
         pass
 
+    visitors.sort(key=lambda x: (x['visit_date'], x.get('visit_time', '00:00')))
+
     return render(request, 'visitors/index.html', {'visitors': visitors})
 
 def set_language(request):
