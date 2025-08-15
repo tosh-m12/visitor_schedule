@@ -99,7 +99,7 @@ def send_daily_email():
         server.set_debuglevel(1)
         server.starttls()
         print("[DEBUG] ログイン中")
-        server.login('cs_info@ngls.sh.cn', 'NGLScs99811')
+        server.login('cs_info@ngls.sh.cn', 'NGLScs9981')
         print("[DEBUG] メール送信中")
         server.sendmail(msg['From'], recipients, msg.as_string())
         server.quit()
