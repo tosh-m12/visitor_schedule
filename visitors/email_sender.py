@@ -6,13 +6,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from django.template.loader import render_to_string
 import django
+from django.conf import settings
 
 # Django 環境初期化
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'visitor_schedule.settings')
 django.setup()
 
 def read_mailing_list():
-    path = os.path.join('visitors', 'mailing_list.csv')
+    path = os.path.join(settings.BASE_DIR, 'visitors', 'mailing_list.csv')
     recipients = []
     with open(path, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
@@ -22,7 +23,7 @@ def read_mailing_list():
     return recipients
 
 def is_holiday(today):
-    holiday_file = os.path.join('visitors', 'holidays.csv')
+    holiday_file = os.path.join(settings.BASE_DIR, 'visitors', 'holidays.csv')
     if not os.path.exists(holiday_file):
         return False
     with open(holiday_file, newline='', encoding='utf-8') as f:
@@ -98,7 +99,7 @@ def send_daily_email():
         server.set_debuglevel(1)
         server.starttls()
         print("[DEBUG] ログイン中")
-        server.login('cs_info@ngls.sh.cn', 'NGLScs99811')
+        server.login('cs_info@ngls.sh.cn', 'NGLScs9981')
         print("[DEBUG] メール送信中")
         server.sendmail(msg['From'], recipients, msg.as_string())
         server.quit()

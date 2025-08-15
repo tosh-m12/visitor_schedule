@@ -1,3 +1,12 @@
 id,visit_date,visit_time,time_undecided,company_name,last_name,first_name,title,purpose,location,host_staff,notes,cancelled
-1,2025-07-30,15:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,Murayama,,true
-2,2025-07-30,15:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,Murayama,,
+1,2025-08-04,14:00:00,False,北陸（上海）国際貿易有限公司,山下,昌史,総経理,会議,48総務棟,村山,,
+2,2025-07-31,10:00:00,False,千住金属（上海）有限公司,原,会军,室长,盘点,德堡路D库,翟丹妮,,false
+3,2025-09-25,09:00:00,False,朝日電器㈱,赤津,遂夫,商品管理部長,会議,総務棟会議室/C-2,村山,非保税検査スキーム準備,false
+4,2025-09-25,09:00:00,False,朝日電器㈱,澤野,雅哉,執行役員,会議,総務棟会議室/C-2,村山,非保税検査スキーム準備,false
+5,2025-09-25,09:00:00,False,朝日電器㈱,小野寺,俊幸,執行役員,会議,総務棟会議室/C-2,村山,非保税検査スキーム準備,false
+6,2025-09-26,10:00:00,False,朝日電器㈱,赤津,遂夫,商品管理部長,会議,（華東統括支店）,村山,,false
+7,2025-09-26,10:00:00,False,朝日電器㈱,澤野,雅哉,執行役員,会議,（華東統括支店）,村山,,false
+8,2025-09-26,10:00:00,False,朝日電器㈱,小野寺,俊幸,執行役員,会議,（華東統括支店）,村山,,false
+9,2025-08-25,13:00:00,False,Green Electronics Asia Ltd,Lee,u-Ling,logisticmanager,visiting WH,德堡路47 号仓库,侯玉铭,,false
+10,2025-08-25,13:00:00,False,Green Electronics Asia Ltd,Chu,Flora,CS manager,visiting WH,德堡路47 号仓库,侯玉铭,,false
+11,2025-08-12,09:00:00,False,牛尾贸易（上海）有限公司,曹,霄鹏,销售,拆箱+合箱,保税区48号C库,戴梦倩,,false
